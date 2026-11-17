@@ -24,3 +24,7 @@ Product page: https://sjgant80-hub.github.io/falllegalpaper/
 - The offline answers are short summaries; the matcher can miss a question phrased differently.
 - Overrides are inserted as HTML without escaping, by design (they are your own edited text). Do not pass untrusted HTML as an override.
 - The section 21 template is a file note recording that the route has ended; it cannot produce a notice.
+- The templates and answers are drafting aids reviewed against the sources cited in them, not a guarantee of fitness for a particular matter.
+- Content is as at 17 November 2026 (the possession templates and the pre-action answer were checked that day). Law changes land on the FallLegalPaper page first; this SDK's weekly parity check then fails until it carries them, so it cannot quietly fall behind the page.
+- Scope: SRA-regulated firms in England and Wales. Templates in English only.
+- No third-party certification or audit. The evidence is the public CI record: every push runs the tests, the mutation gate and the parity check where anyone can read the result.
