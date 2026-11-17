@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FallLegalPaper SDK</title>
+<meta name="description" content="The FallLegalPaper template engine and its 15 document templates for SRA-regulated firms, plus 12 offline answers, as a JavaScript library. MIT, no dependencies, no network.">
+<link rel="canonical" href="https://sjgant80-hub.github.io/falllegalpaper-sdk/">
+<style>
+:root{--bg:#f7f6f2;--panel:#ffffff;--ink:#1d1d22;--ink-2:#55555f;--line:#dcd9d0;--accent:#7a4a12;--accent-soft:#f4ead9;--ok:#1d6b3a;--warn:#8a5a00;--code:#f0eee8;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121317;--panel:#1b1d23;--ink:#ecebe7;--ink-2:#a9a8b3;--line:#30323b;--accent:#e0a45a;--accent-soft:#2a2216;--ok:#6fd08f;--warn:#e7b85c;--code:#22242b;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121317;--panel:#1b1d23;--ink:#ecebe7;--ink-2:#a9a8b3;--line:#30323b;--accent:#e0a45a;--accent-soft:#2a2216;--ok:#6fd08f;--warn:#e7b85c;--code:#22242b;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:920px;margin:0 auto;padding:24px 16px 64px}
+h1{font-size:clamp(26px,5vw,38px);line-height:1.15;margin:8px 0 12px}
+h2{font-size:22px;margin:44px 0 12px;padding-top:8px;border-top:1px solid var(--line)}
+h3{font-size:17px;margin:22px 0 8px}
+p,li{max-width:72ch}
+a{color:var(--accent)}
+.lede{font-size:18px;color:var(--ink)}
+.kicker{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);margin:0}
+nav.toc{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14px;margin:16px 0 8px}
+pre,code,.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:14px}
+pre{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:12px 14px;overflow-x:auto;white-space:pre}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;margin:12px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+table{width:100%;border-collapse:collapse;font-size:15px;display:block;overflow-x:auto}
+td,th{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{font-size:13px;color:var(--ink-2);font-weight:600}
+label{display:block;font-size:14px;color:var(--ink-2);margin:10px 0 4px}
+input,select,textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 10px}
+textarea{min-height:90px}
+button{font:inherit;font-weight:600;color:#fff;background:var(--accent);border:0;border-radius:8px;padding:10px 16px;margin-top:12px;cursor:pointer}
+:root[data-theme="dark"] button{color:#1b1407}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) button{color:#1b1407}}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.out{white-space:pre-wrap;word-break:break-word;background:var(--code);border:1px solid var(--line);border-radius:10px;padding:12px;min-height:48px;font-size:14px}
+.pill{display:inline-block;font-size:13px;font-weight:600;border-radius:999px;padding:2px 10px;border:1px solid var(--line)}
+.ok{color:var(--ok)}.warn{color:var(--warn)}
+.diagram{width:100%;height:auto;max-width:760px}
+.theme{float:right;margin-top:0;background:transparent;color:var(--ink-2);border:1px solid var(--line);font-weight:500;padding:6px 10px}
+footer{margin-top:48px;font-size:14px;color:var(--ink-2)}
+</style>
+</head>
+<body>
+<main>
+<button class="theme" id="theme" type="button" aria-label="Switch light or dark">Theme</button>
+<p class="kicker">JavaScript SDK · MIT · zero dependencies</p>
+<h1>FallLegalPaper SDK</h1>
+<p class="lede">A JavaScript library with the document engine behind FallLegalPaper: <strong>15 templates</strong> for SRA-regulated firms (engagement letter, terms of business, costs information, CFA, DBA, advice letter, letter before action, settlement, file closure, no-win-no-fee information, vulnerable client note, simple will, LPA information, and the section 8 possession note on Form 3A, with section 21 recorded as retired), the <strong>engine that fills them</strong> into HTML, Markdown or a printable page, and <strong>12 offline answers</strong> on SRA and court rules.</p>
+<p>It is the <a href="https://sjgant80-hub.github.io/falllegalpaper/">FallLegalPaper</a> page's own code, taken out so a developer, or an AI agent, can call it directly. The templates are drafting aids: a solicitor reviews every document before it goes out.</p>
+<nav class="toc" aria-label="On this page"><a href="#start">Start here</a><a href="#try">Try it</a><a href="#how">How it works</a><a href="#api">API</a><a href="#blueprint">Blueprint</a><a href="#business">For your business</a><a href="#risks">Risks, straight</a><a href="#proof">Proof</a><a href="#paper">The explainer</a></nav>
+
+<h2 id="start">Start here</h2>
+<ol>
+<li>Install it from GitHub (it is not on the npm registry): <pre>npm install github:sjgant80-hub/falllegalpaper-sdk</pre></li>
+<li>Import what you need and call it:<pre>import { buildContext, renderHtml, renderMarkdown, fieldsOf, standaloneHtml } from '@ai-native-solutions/falllegalpaper-sdk';
+
+fieldsOf('engagement');                     // the {{fields}} the template reads
+const ctx = buildContext({ client: { title: 'Ms', firstName: 'Ada', lastName: 'Lovelace' } });
+const { html, missing } = renderHtml('engagement', ctx);   // HTML sections + required fields still empty
+const md = renderMarkdown('s8', ctx);                       // missing fields show as «path»
+const printable = standaloneHtml(html, 'Engagement letter');</pre></li>
+<li>Or use it in a browser page with no install: <pre>import * as sdk from 'https://sjgant80-hub.github.io/falllegalpaper-sdk/src/index.js';</pre></li>
+<li>Pin a commit for production (<code>npm install github:sjgant80-hub/falllegalpaper-sdk#&lt;commit&gt;</code>) so what you tested is what runs.</li>
+</ol>
+
+<h2 id="try">Try it</h2>
+<p>These panels run the SDK's own <code>src/</code> in your browser: the same files the tests and the mutation gate prove. Nothing you type leaves this page.</p>
+<div class="card"><h3>Fill a template</h3>
+<div class="grid">
+<div><label for="tpl">Template</label><select id="tpl"></select>
+<label for="t">Client title</label><input id="t" value="Ms">
+<label for="fn">First name</label><input id="fn" value="Ada">
+<label for="ln">Last name</label><input id="ln" value="Lovelace">
+<label for="firm">Firm name</label><input id="firm" value="Example LLP">
+<button id="fill" type="button">Fill</button></div>
+<div><p class="kicker">Fields this template reads</p><div class="out" id="fields"></div>
+<p class="kicker" style="margin-top:12px">Still missing (required)</p><div class="out" id="missing" aria-live="polite">Press Fill.</div></div>
+</div>
+<p class="kicker" style="margin-top:12px">Markdown (first 1,500 characters)</p><div class="out" id="md" aria-live="polite"></div></div>
+<div class="card"><h3>Ask a rules question</h3>
+<label for="q">Question</label><input id="q" value="what is the cap on a CFA success fee?">
+<button id="ask" type="button">Ask</button>
+<p class="kicker" style="margin-top:12px">Answer</p><div class="out" id="aout" aria-live="polite">Press Ask.</div></div>
+
+<h2 id="how">How it works</h2>
+<svg viewBox="0 0 760 250" role="img" aria-labelledby="dg-t dg-d" class="diagram">
+<title id="dg-t">How the SDK and the live page stay one program</title>
+<desc id="dg-d">The product page and this SDK carry the same code. Tests and a mutation gate prove that code; a parity check fails the build if the page and the SDK ever differ. Your code, or an AI agent, imports the proven module.</desc>
+<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--ink-2)"/></marker></defs>
+<g font-family="inherit" font-size="13">
+<rect x="10" y="20" width="200" height="70" rx="10" fill="var(--panel)" stroke="var(--line)"/>
+<text x="110" y="48" text-anchor="middle" fill="var(--ink)" font-weight="600">FallLegalPaper page</text>
+<text x="110" y="68" text-anchor="middle" fill="var(--ink-2)">the product people use</text>
+<rect x="280" y="20" width="200" height="70" rx="10" fill="var(--accent-soft)" stroke="var(--accent)"/>
+<text x="380" y="48" text-anchor="middle" fill="var(--ink)" font-weight="600">falllegalpaper-sdk</text>
+<text x="380" y="68" text-anchor="middle" fill="var(--ink-2)">the same code, as modules</text>
+<rect x="550" y="20" width="200" height="70" rx="10" fill="var(--panel)" stroke="var(--line)"/>
+<text x="650" y="48" text-anchor="middle" fill="var(--ink)" font-weight="600">your code · an agent</text>
+<text x="650" y="68" text-anchor="middle" fill="var(--ink-2)">import, call, get the answer</text>
+<line x1="212" y1="55" x2="276" y2="55" stroke="var(--ink-2)" stroke-width="1.5" marker-end="url(#ar)" marker-start="url(#ar)"/>
+<text x="244" y="45" text-anchor="middle" fill="var(--ink-2)" font-size="11">parity</text>
+<line x1="482" y1="55" x2="546" y2="55" stroke="var(--ink-2)" stroke-width="1.5" marker-end="url(#ar)"/>
+<text x="514" y="45" text-anchor="middle" fill="var(--ink-2)" font-size="11">import</text>
+<rect x="190" y="160" width="380" height="70" rx="10" fill="var(--panel)" stroke="var(--line)" stroke-dasharray="5 4"/>
+<text x="380" y="188" text-anchor="middle" fill="var(--ink)" font-weight="600">the gate, on every push</text>
+<text x="380" y="208" text-anchor="middle" fill="var(--ink-2)">tests · mutation gate must be clean · fuzz · parity</text>
+<line x1="380" y1="158" x2="380" y2="94" stroke="var(--ink-2)" stroke-width="1.5" marker-end="url(#ar)"/>
+</g></svg>
+<ol><li>The engine, the 15 templates, the 12 answers and the printable page are lifted from the FallLegalPaper page byte for byte (only <code>export</code> added). The page itself now runs the same functions: its own document rendering and its chat matcher call them. <code>scripts/parity.mjs</code> fails the build if a single lifted block is missing from the published page.</li><li>A template is a list of sections; each has a heading, a body with <code>{{path}}</code> placeholders and its required fields. Filling to HTML escapes every value and marks each empty field visibly; filling to Markdown leaves values raw and shows a missing field as «path».</li><li>The page's small Markdown renderer handles bold, bullet and numbered lists (and switching between them), rules, blank lines and the signature block, and escapes everything else.</li><li>An offline answer is chosen when two or more of its keywords appear in your question: the longer words of its own question (five letters or more) and its acronyms (CFA, DBA, LPA, ATE, SRA). Otherwise there is no answer, rather than a guess.</li><li>Every branch of the engine is pinned by exact-output tests, and the mutation gate confirms each comparison is tested (24 of 24). The page's old engine and this one were compared on every template, empty and filled with HTML-special values, with and without overrides: 120 renders, none different.</li></ol>
+
+<h2 id="api">API</h2>
+<table><thead><tr><th>Export</th><th>What it does</th></tr></thead><tbody>
+<tr><td class="mono">TEMPLATES · templateById · templatesByArea</td><td>The 15 templates and lookups (an area's list includes the templates for every area).</td></tr>
+<tr><td class="mono">fieldsOf(template)</td><td>Every {{path}} a template reads, in first-use order.</td></tr>
+<tr><td class="mono">buildContext({ client, matter, adviser, supervisor, firm, today, docRef, ctx })</td><td>A context in the shape the templates read; anything left out shows as a placeholder.</td></tr>
+<tr><td class="mono">renderHtml(template, ctx, overrides?)</td><td>{ html, missing }: the sections as HTML, and the required fields still empty.</td></tr>
+<tr><td class="mono">renderMarkdown(template, ctx, overrides?)</td><td>The document as Markdown.</td></tr>
+<tr><td class="mono">standaloneHtml(html, title)</td><td>A complete, printable HTML page.</td></tr>
+<tr><td class="mono">matchT0(question) · T0_RULES</td><td>The matching offline answer, or null; and the 12 answers.</td></tr>
+<tr><td class="mono">fillBody · fillBodyMd · mdToHtml · stripHtml · esc · toText · get · sec · sectionsHtml · sectionsMarkdown</td><td>The engine's parts, for building your own templates.</td></tr>
+</tbody></table>
+
+<h2 id="blueprint">Blueprint</h2>
+<table><thead><tr><th>File</th><th>What is in it</th></tr></thead><tbody>
+<tr><td class="mono">src/engine.js</td><td>Placeholder filling, the Markdown renderer, the section renderers.</td></tr>
+<tr><td class="mono">src/templates.js</td><td>The 15 templates.</td></tr>
+<tr><td class="mono">src/qa.js</td><td>The 12 answers and the matcher.</td></tr>
+<tr><td class="mono">src/document.js</td><td>Lookups, context, rendering and the printable page.</td></tr>
+<tr><td class="mono">test/sdk.test.js · scripts/parity.mjs</td><td>14 tests and the parity check.</td></tr>
+</tbody></table>
+
+<h2 id="business">For your business</h2>
+<p>For a law firm, a case-management vendor or a legal operations team: the same drafting engine and templates as FallLegalPaper, callable from your own matter system, so documents come out the same wherever they are produced.</p>
+<div class="grid"><div class="card"><h3>Managing partner</h3><p>Consistent client-care and engagement documents across every system and office, from one reviewed set of templates.</p></div><div class="card"><h3>Finance director</h3><p>MIT licence, no licence fee, nothing metered, no hosting bill.</p></div><div class="card"><h3>IT and information security</h3><p>No dependencies, no network calls, no storage. Client data you pass stays in your process.</p></div><div class="card"><h3>COLP and risk</h3><p>The templates are open to review; the build proves the SDK and the page carry the same text.</p></div><div class="card"><h3>Developers</h3><p>Pass a template and a context; get HTML, Markdown or a printable page, plus the list of fields still missing.</p></div></div>
+<h3>What it costs, against what you pay now</h3>
+<p>No licence fee and nothing metered. Against a document-assembly product charged per user, this covers filling, rendering and the missing-field check for these 15 templates; the drafting judgment, and any template you need that is not here, is still your team's work.</p>
+<h3>Security and data protection</h3>
+<p>The functions are pure: text in, text out, in memory. No network, no storage, no telemetry. Values are HTML-escaped when filled into HTML. Overrides you pass are your own HTML and are inserted as given.</p>
+<h3>Compliance</h3>
+<p>Drafting aids for SRA-regulated firms, not legal advice. The possession templates reflect the Renters' Rights Act 2025 (England, from 1 May 2026): section 21 is recorded as retired, and the section 8 note uses Form 3A, 3 months' arrears (13 weeks if weekly or fortnightly) and 4 weeks' notice. The pre-action answer reflects the Practice Direction (14 days in a straightforward case, up to 3 months if very complex) and the Debt Claims protocol (30 days).</p>
+<h3>Deployment and roll-out</h3>
+<ol><li>Install from GitHub and pin a commit.</li><li>Have a supervising solicitor review the templates you will use.</li><li>Map your matter fields to the context (fieldsOf lists what each template reads).</li><li>Run <code>npm run parity</code> before each upgrade.</li></ol>
+<h3>Support and ownership</h3>
+<p>Supplied by <a href="https://www.ai-nativesolutions.com">AI Native Solutions</a>. Support, service levels, warranty and liability are agreed per deployment, in that deployment's agreement. The code is MIT-licensed: there is no licence fee, you hold a copy, and it keeps working without us.</p>
+<h3>The case for the board</h3>
+<p>An owned, reviewed drafting component: the text is visible, the engine is proven on a public CI record, and the SDK cannot drift from the product page. It speeds up drafting; solicitors still sign off every document.</p>
+
+<h2 id="risks">Risks, answered straight</h2>
+<ul><li>Templates are as at November 2026. Fees, thresholds and forms change: review before use.</li><li>The offline answers are short summaries; the matcher can miss a question phrased differently.</li><li>Overrides are inserted as HTML without escaping, by design (they are your own edited text). Do not pass untrusted HTML as an override.</li><li>The section 21 template is a file note recording that the route has ended; it cannot produce a notice.</li></ul>
+
+<h2 id="proof">Proof</h2>
+<p>Every push runs the gate on GitHub's own machines: <a href="https://github.com/sjgant80-hub/falllegalpaper-sdk/actions">the run history is public</a>, so you can check each claim below rather than trust it.</p>
+<table><thead><tr><th>Check</th><th>Result at this release</th></tr></thead><tbody>
+<tr><td class="mono">Tests</td><td>14 pass (node --test)</td></tr>
+<tr><td class="mono">Mutation gate (witness v0.6)</td><td>engine 15/15 · answers 4/4 · document 6/6: clean. templates.js is data, with no operators to flip</td></tr>
+<tr><td class="mono">Fuzz</td><td>esc, toText, fillBody, mdToHtml, fillBodyMd, stripHtml and standaloneHtml never throw on garbage input</td></tr>
+<tr><td class="mono">Page equivalence</td><td>the old page engine and this one: 120 renders of all 15 templates, none different; 52 questions, same answer every time</td></tr>
+<tr><td class="mono">Parity with the live page</td><td>all 14 lifted blocks appear in the page byte for byte</td></tr>
+<tr><td class="mono">Dependencies · network calls</td><td>none · none</td></tr>
+</tbody></table>
+
+<h2 id="paper">The explainer</h2>
+<p>Before this repair the package exported the page's browser internals (its DOM helper, its storage, its AI chip), which could not run outside a browser, and its main file did not parse. The engine that actually matters, filling templates and rendering documents, was buried inside the app and tied to its stored state.</p>
+<p>The repair pulled that engine out as pure functions, put the same functions back into the page (the page's own rendering now calls them), and proved nothing changed: every template rendered through the old and the new code, empty and filled with awkward values, came out identical.</p>
+<p>It also corrected the product. Three of the twelve offline answers (the CFA cap, the DBA cap and the LPA fee) could never be reached: their questions have only one long word and the matcher needs two. Acronyms now count, every answer is reached by its own question, and no answer the old matcher gave has changed. And the pre-action answer gave the debt protocol's reply period as 14 days; the protocol gives a debtor 30 days.</p>
+
+<footer>
+<p>falllegalpaper-sdk v1.1.0 · MIT, © Simon Gant · <a href="https://github.com/sjgant80-hub/falllegalpaper-sdk">source</a> · <a href="https://sjgant80-hub.github.io/falllegalpaper/">the FallLegalPaper page</a> · supplied by <a href="https://www.ai-nativesolutions.com">AI Native Solutions</a></p>
+</footer>
+</main>
+<script>
+(function () {
+  var b = document.getElementById('theme'), r = document.documentElement;
+  try { var t = localStorage.getItem('theme'); if (t) r.setAttribute('data-theme', t); } catch (e) {}
+  b.addEventListener('click', function () {
+    var dark = r.getAttribute('data-theme') ? r.getAttribute('data-theme') === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    var next = dark ? 'light' : 'dark'; r.setAttribute('data-theme', next);
+    try { localStorage.setItem('theme', next); } catch (e) {}
+  });
+})();
+</script>
+<script type="module">
+import * as sdk from './src/index.js';
+const $ = (id) => document.getElementById(id);
+const show = (id, v) => { $(id).textContent = typeof v === 'string' ? v : JSON.stringify(v, null, 2); };
+for (const t of sdk.TEMPLATES) { const o = document.createElement('option'); o.value = t.id; o.textContent = t.name; $('tpl').appendChild(o); }
+const fields = () => show('fields', sdk.fieldsOf($('tpl').value).join('\n'));
+$('tpl').addEventListener('change', fields); fields();
+$('fill').addEventListener('click', () => {
+  const ctx = sdk.buildContext({ client: { title: $('t').value, firstName: $('fn').value, lastName: $('ln').value, address: {}, kyc: {} }, firm: { name: $('firm').value, registeredAddress: {} } });
+  const r = sdk.renderHtml($('tpl').value, ctx);
+  show('missing', r.missing.length ? r.missing.map((m) => m.sec + ': ' + m.field).join('\n') : 'None: every required field is filled.');
+  show('md', sdk.renderMarkdown($('tpl').value, ctx).slice(0, 1500));
+});
+$('ask').addEventListener('click', () => {
+  const r = sdk.matchT0($('q').value);
+  show('aout', r ? r.q + '\n\n' + r.a : 'No offline answer matched (an answer needs two of its keywords: the longer words and acronyms of its question). The answers cover engagement letters, costs transparency, CFAs, DBAs, client care, the Legal Ombudsman, pre-action protocols, vulnerable clients, section 21, will challenges, LPA fees and ATE insurance.');
+});
+</script>
+</body>
+</html>

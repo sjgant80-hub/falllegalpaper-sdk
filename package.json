@@ -1,24 +1,38 @@
 {
   "name": "@ai-native-solutions/falllegalpaper-sdk",
-  "version": "1.0.0",
-  "description": "falllegalpaper SDK · sovereign single-file library extracted from falllegalpaper/index.html",
+  "version": "1.1.0",
+  "description": "The FallLegalPaper template engine and its 15 document templates for SRA-regulated firms, plus 12 offline answers, as a JavaScript library. MIT, no dependencies, no network.",
   "type": "module",
   "main": "src/index.js",
-  "types": "src/index.d.ts",
-  "files": ["src", "docs", "README.md", "LICENSE"],
-  "scripts": {
-    "test": "node --test test/",
-    "smoke": "node examples/smoke.js"
+  "exports": {
+    ".": "./src/index.js"
   },
-  "keywords": ["falllegalpaper", "sdk", "sovereign", "ai-native-solutions"],
-  "author": "AI-Native Solutions",
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test test/sdk.test.js",
+    "example": "node examples/basic.js",
+    "parity": "node scripts/parity.mjs"
+  },
+  "keywords": [
+    "law-firm",
+    "sra",
+    "document-assembly",
+    "templates",
+    "uk",
+    "sdk"
+  ],
+  "author": "AI Native Solutions",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/sjgant80-hub/falllegalpaper-sdk.git"
   },
-  "homepage": "https://sjgant80-hub.github.io/falllegalpaper-sdk/",
-  "publishConfig": {
-    "access": "public"
-  }
+  "homepage": "https://sjgant80-hub.github.io/falllegalpaper-sdk/"
 }

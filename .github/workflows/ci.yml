@@ -1,0 +1,73 @@
+name: gate
+# Every push: the tests, the mutation gate (pinned witness v0.6; a mutant that survives is a test that was not
+# really testing), the parity check against the live product page, the example, and the page check.
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 6 * * 1'   # weekly: catches the product page drifting away from this SDK
+jobs:
+  sdk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - name: tests
+        run: node --test test/sdk.test.js
+      - name: the example runs
+        run: node examples/basic.js
+      - name: parity with the live FallLegalPaper page
+        run: node scripts/parity.mjs
+      - name: fetch the pinned mutation gate
+        run: git clone --depth 1 --branch v0.6 https://github.com/sjgant80-hub/witness.git .witness
+      - name: mutation gate · src/engine.js must be CLEAN
+        run: |
+          node .witness/witness.mjs mutate src/engine.js --cap 100000 --timeout 60000 --test node --test test/sdk.test.js | tee gate.out
+          node -e "const b=require('fs').readFileSync('gate.out','utf8');const j=JSON.parse(b.slice(b.indexOf('{'),b.lastIndexOf('}')+1));if(j.clean!==true){console.error('src/engine.js: NOT CLEAN');process.exit(1)}console.log('src/engine.js: CLEAN '+j.killed+'/'+j.total+(j.ignored.length?' ('+j.ignored.length+' reviewed-equivalent, reasons in the baseline)':''))"
+      - name: mutation gate · src/qa.js must be CLEAN
+        run: |
+          node .witness/witness.mjs mutate src/qa.js --cap 100000 --timeout 60000 --test node --test test/sdk.test.js | tee gate.out
+          node -e "const b=require('fs').readFileSync('gate.out','utf8');const j=JSON.parse(b.slice(b.indexOf('{'),b.lastIndexOf('}')+1));if(j.clean!==true){console.error('src/qa.js: NOT CLEAN');process.exit(1)}console.log('src/qa.js: CLEAN '+j.killed+'/'+j.total+(j.ignored.length?' ('+j.ignored.length+' reviewed-equivalent, reasons in the baseline)':''))"
+      - name: mutation gate · src/document.js must be CLEAN
+        run: |
+          node .witness/witness.mjs mutate src/document.js --cap 100000 --timeout 60000 --test node --test test/sdk.test.js | tee gate.out
+          node -e "const b=require('fs').readFileSync('gate.out','utf8');const j=JSON.parse(b.slice(b.indexOf('{'),b.lastIndexOf('}')+1));if(j.clean!==true){console.error('src/document.js: NOT CLEAN');process.exit(1)}console.log('src/document.js: CLEAN '+j.killed+'/'+j.total+(j.ignored.length?' ('+j.ignored.length+' reviewed-equivalent, reasons in the baseline)':''))"
+  page:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - name: the page is actually a working page
+        run: |
+          node -e "
+          const fs=require('fs');
+          const html=['index.html','docs/index.html'];
+          let fail=0;
+          for(const f of html){
+            const s=fs.readFileSync(f,'utf8');
+            const blocks=[...s.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)];
+            blocks.forEach((m,i)=>{
+              try { new (require('vm').Script)(m[1].replace(/^\s*import\s.*$/gm,'').replace(/^\s*export\s/gm,'')); }
+              catch(e){ console.error(f+' script['+i+'] DOES NOT PARSE: '+e.message); fail=1; }
+            });
+            const ph=s.match(/__[A-Z][A-Z0-9_]*__/g);
+            if(ph){ console.error(f+' serves unresolved placeholders: '+[...new Set(ph)].join(', ')); fail=1; }
+            for(const m of s.matchAll(/(?:href|src)=\"(?!https?:|data:|mailto:|#|\/\/)([^\"?#]+)/g)){
+              const t=require('path').join(require('path').dirname(f),m[1]).replace(/\\\\/g,'/');
+              const p=t.endsWith('/')?t+'index.html':t;
+              if(!fs.existsSync(p)){ console.error(f+' links to a file that is not here: '+m[1]); fail=1; }
+            }
+            for(const m of s.matchAll(/from '\.\/([^']+)'/g)){ if(!fs.existsSync(m[1])){ console.error(f+' imports a module that is not here: '+m[1]); fail=1; } }
+          }
+          for(const f of fs.readdirSync('.').concat(fs.readdirSync('src').map(x=>'src/'+x))){
+            if(!/\.(html|js|mjs|json|md)$/.test(f)) continue;
+            const s=fs.readFileSync(f,'utf8');
+            const hit=s.match(/(sk-ant-[A-Za-z0-9-]{20,}|sk-[A-Za-z0-9]{32,}|ghp_[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}|-----BEGIN [A-Z ]*PRIVATE KEY-----)/);
+            if(hit){ console.error(f+' contains what looks like a live credential'); fail=1; }
+          }
+          if(fail){ console.error('PAGE GATE FAILED'); process.exit(1); }
+          console.log('page gate clean: scripts parse, no placeholders, no dead links or imports, no committed keys');
+          "

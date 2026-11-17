@@ -1,35 +1,26 @@
-# falllegalpaper SDK
+# falllegalpaper-sdk
 
-> Companion SDK for falllegalpaper · minted by mint-all · sovereign estate · SDK on npm · MIT-licensed · Ed25519-signed · listed on FallMarket.
+> The FallLegalPaper template engine and its 15 document templates for SRA-regulated firms, plus 12 offline answers, as a JavaScript library. MIT, no dependencies, no network.
 
-falllegalpaper SDK is a sovereign tool built by the AI-Native Solutions guild. It runs on your machine, ships with source, and never phones home.
+Live page: https://sjgant80-hub.github.io/falllegalpaper-sdk/
+Source: https://github.com/sjgant80-hub/falllegalpaper-sdk
+Install: npm install github:sjgant80-hub/falllegalpaper-sdk
+Product page: https://sjgant80-hub.github.io/falllegalpaper/
 
-## Canonical URL
+## Exports
 
-https://sjgant80-hub.github.io/falllegalpaper-sdk/
+- TEMPLATES · templateById · templatesByArea: The 15 templates and lookups (an area's list includes the templates for every area).
+- fieldsOf(template): Every {{path}} a template reads, in first-use order.
+- buildContext({ client, matter, adviser, supervisor, firm, today, docRef, ctx }): A context in the shape the templates read; anything left out shows as a placeholder.
+- renderHtml(template, ctx, overrides?): { html, missing }: the sections as HTML, and the required fields still empty.
+- renderMarkdown(template, ctx, overrides?): The document as Markdown.
+- standaloneHtml(html, title): A complete, printable HTML page.
+- matchT0(question) · T0_RULES: The matching offline answer, or null; and the 12 answers.
+- fillBody · fillBodyMd · mdToHtml · stripHtml · esc · toText · get · sec · sectionsHtml · sectionsMarkdown: The engine's parts, for building your own templates.
 
-## Category
+## Limits
 
-SDK on npm. Part of the FallMarket sovereign agent marketplace (https://sjgant80-hub.github.io/fallmarket/).
-
-## Install
-
-```
-npm install @ai-native-solutions/falllegalpaper-sdk
-```
-
-## License
-
-MIT · Copyright 2026 AI-Native Solutions
-
-## Related
-
-- FallMarket registry entry: https://sjgant80-hub.github.io/fallmarket/listing.html?id=falllegalpaper-sdk
-- Source: https://github.com/sjgant80-hub/falllegalpaper-sdk
-- FallMarket catalog: https://sjgant80-hub.github.io/fallmarket/
-- Machine-readable catalog: https://sjgant80-hub.github.io/fallmarket/listings.json
-- Owner: AI-Native Solutions · https://ai-nativesolutions.com
-
-## About AI-Native Solutions
-
-AI-Native Solutions builds sovereign single-file AI tools, MCP servers, SDKs, and HTTP APIs. All work is MIT, all is Ed25519-signed, all is discoverable via FallMarket. This tool is one entry in a 766-listing catalog.
+- Templates are as at November 2026. Fees, thresholds and forms change: review before use.
+- The offline answers are short summaries; the matcher can miss a question phrased differently.
+- Overrides are inserted as HTML without escaping, by design (they are your own edited text). Do not pass untrusted HTML as an override.
+- The section 21 template is a file note recording that the route has ended; it cannot produce a notice.
